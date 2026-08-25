@@ -20,9 +20,22 @@ class WebSocketClient {
     if (!this.token || this.isExplicitlyClosed) return;
 
     try {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const host = window.location.host;
-      const url = `${protocol}//${host}/ws/dashboard?token=${encodeURIComponent(this.token)}`;
+      let wsBase = '';
+      const rawApiBase = import.meta.env.VITE_API_BASE_URL;
+      if (rawApiBase) {
+        try {
+          const parsed = new URL(rawApiBase);
+          const wsProto = parsed.protocol === 'https:' ? 'wss:' : 'ws:';
+          wsBase = `${wsProto}//${parsed.host}`;
+        } catch {
+          const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+          wsBase = `${protocol}//${window.location.host}`;
+        }
+      } else {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        wsBase = `${protocol}//${window.location.host}`;
+      }
+      const url = `${wsBase}/ws/dashboard?token=${encodeURIComponent(this.token)}`;
 
       this.socket = new WebSocket(url);
 

@@ -13,7 +13,8 @@ import type {
   TrendsAnalytics,
 } from '../types';
 
-const BASE_URL = '';
+const RAW_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const BASE_URL = RAW_BASE ? RAW_BASE.replace(/\/+$/, '') : '';
 
 export class ApiError extends Error {
   status: number;
@@ -68,7 +69,11 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     throw new ApiError(message, response.status, errorData);
   }
 
-  return response.json();
+  try {
+    return await response.json();
+  } catch {
+    return {} as T;
+  }
 }
 
 export const api = {
