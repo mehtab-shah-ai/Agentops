@@ -19,15 +19,31 @@ export const AuthPage: React.FC = () => {
     setError(null);
     setSubmitting(true);
 
+    const isDemoAccount = email.trim().toLowerCase() === 'demo@agentops.dev';
+
     try {
       if (mode === 'signup') {
         await register(email, password, organization || 'My AI Labs');
       } else {
-        await login(email, password);
+        if (isDemoAccount) {
+          try {
+            await login(email, password);
+          } catch {
+            // If backend is waking up / offline, seamlessly enter demo mode with 0 latency
+            await enterDemoMode();
+          }
+        } else {
+          await login(email, password);
+        }
       }
       navigate('/app');
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please verify credentials.');
+      if (isDemoAccount) {
+        await enterDemoMode();
+        navigate('/app');
+      } else {
+        setError(err.message || 'Authentication failed. Please verify credentials.');
+      }
     } finally {
       setSubmitting(false);
     }
