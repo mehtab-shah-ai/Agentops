@@ -1,6 +1,5 @@
 # ==============================================================================
-# AgentGuard Backend Production Dockerfile
-# Optimized for local development and single-node AWS EC2 deployment
+# AgentOps Backend Production Dockerfile (Root Context)
 # ==============================================================================
 
 FROM python:3.12-slim
@@ -19,21 +18,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency requirements and install
-COPY requirements.txt .
+# Copy dependency requirements from backend/
+COPY backend/requirements.txt requirements.txt
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Copy application source code
-COPY app/ ./app/
+# Copy application source code from backend/
+COPY backend/app/ ./app/
 COPY .env.example ./.env.example
 
-# Expose FastAPI HTTP & WebSocket port
+# Expose dynamic port
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
-# Production entrypoint with Uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2", "--proxy-headers"]
+# Production entrypoint with Uvicorn respecting Render's dynamic $PORT
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 2 --proxy-headers"]
