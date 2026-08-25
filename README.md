@@ -15,7 +15,7 @@
 ### **The all-in-one platform to monitor, secure, and cut costs for your autonomous AI agents.**
 *Track every agent step, catch infinite loops, block prompt hacking, and calculate exact LLM spend in real time.*
 
-[🚀 Quickstart in 2 Minutes](#-quickstart-in-2-minutes) • [⚠️ What Goes Wrong?](#-the-problem-what-goes-wrong-in-production) • [🌟 How AgentOps Solves It](#-how-agentops-solves-it) • [🏛️ Architecture](#-system-architecture) • [🛡️ Security Vectors](#-owasp-red-team-attack-vectors-tested)
+[🚀 Quickstart](#-quickstart-in-2-minutes) • [⚠️ What Goes Wrong?](#-the-problem-what-goes-wrong-in-production) • [🌟 3 Core Superpowers](#-how-agentops-solves-it-3-core-superpowers) • [🏛️ Architecture](#-system-architecture) • [🛡️ Security Vectors](#-automated-security-red-team-testing)
 
 </div>
 
@@ -28,77 +28,92 @@ When software teams deploy autonomous LLM agents (built with **LangGraph, CrewAI
 **Why?** Because AI agents don't crash with HTTP 500 errors—they fail **silently** while returning HTTP 200 OK:
 
 ```mermaid
-graph TD
-    User([Real Customer]) -->|1. Tricky Question| Agent[AI Agent in Production]
-    Agent -->|Silent Bug 1| Inj[🚨 Prompt Injections & Secret API Key Leaks]
-    Agent -->|Silent Bug 2| Loop[🔁 20+ Infinite Tool Loops Burning $100s]
-    Agent -->|Silent Bug 3| Hallucinate[⚠️ Fake Answers & Confident Hallucinations]
-    Agent -->|Silent Bug 4| Crash[💥 Rate Limit Hit & UI Freezes]
+flowchart TD
+    User([Real Customer]) -->|1. Asks Tricky Question| Agent[AI Agent in Production]
+    Agent -->|Silent Problem 1| Inj[🚨 Prompt Injections & Secret API Key Leaks]
+    Agent -->|Silent Problem 2| Loop[🔁 20+ Infinite Tool Loops Burning $100s]
+    Agent -->|Silent Problem 3| Hallucinate[⚠️ Fake Answers & Confident Hallucinations]
+    Agent -->|Silent Problem 4| Crash[💥 Rate Limit Hit & App Freezes]
 ```
 
-1. **🚨 Prompt Injections & Jailbreaks:** Hackers type *"Ignore all previous rules"* to steal your system instructions or leak confidential API keys.
-2. **🔁 Endless Tool Loops & Cost Burn:** If a database query fails, the agent repeats the exact same tool call 20+ times, freezing the user's screen and burning hundreds of dollars.
-3. **⚠️ Fake Answers & Hallucinations:** The agent invents fake discounts or invalid policies with 100% confidence, misleading your real customers.
-4. **💸 Blind Token Invoices:** Teams get surprise monthly cloud bills without knowing which agent, user, or model caused the spike.
+1. **🚨 Prompt Injections & Jailbreaks:** Attackers type *"Ignore all previous rules"* to steal your private instructions or extract secret API keys.
+2. **🔁 Endless Tool Loops & Cost Burn:** If a tool API fails, the agent repeats the exact same tool call 20+ times, freezing the user's screen and wasting hundreds of dollars.
+3. **⚠️ Fake Answers & Hallucinations:** The agent invents fake discounts or invalid return policies with 100% confidence, misleading real customers.
+4. **💸 Blind Token Invoices:** Teams get huge surprise cloud bills without knowing which agent, user, or model caused the cost spike.
 
 ---
 
-## 🌟 How AgentOps Solves It
+## 🌟 How AgentOps Solves It (3 Core Superpowers)
 
 AgentOps gives developers **complete visibility, security defense, and financial control** over their autonomous agents:
 
 ```mermaid
-graph LR
-    subgraph Defense["🛡️ Automated Defense"]
-        A[Real-Time Ingestion] --> B[Loop Interceptor]
-        B --> C[OWASP Red-Team Pen-Testing]
-        C --> D[Live Web Fact-Checking]
+flowchart TD
+    subgraph AgentApp["🤖 Your AI Agent Application"]
+        A["LangGraph / CrewAI / Custom Python Agent"]
     end
 
-    subgraph Observability["📊 Live Observability"]
-        D --> E[Multi-Agent Call Tree]
-        E --> F[Exact Multi-Model Token Cost]
-        F --> G[Real-Time Dashboard]
+    A -->|"1. Sends Trace (@track_agent)"| Core
+
+    subgraph Core["🛡️ AgentOps 3 Core Superpowers"]
+        direction TB
+        subgraph Pillar1["🔍 1. Live Observability"]
+            O1["• Multi-Agent Step Call Trees"]
+            O2["• Tool Calls & Latency (ms)"]
+            O3["• LLM Reasoning Tokens"]
+        end
+        subgraph Pillar2["🛡️ 2. Security & Hack Defense"]
+            S1["• Prompt Injection Testing"]
+            S2["• Secret API Key Leak Guard"]
+            S3["• Live Web Fact-Checking"]
+        end
+        subgraph Pillar3["💰 3. Cost & Token Control"]
+            C1["• 4-Decimal Precision ($0.0001)"]
+            C2["• OpenAI, Claude, Groq, Gemini"]
+            C3["• Infinite Loop Interceptor"]
+        end
     end
+
+    Core -->|"2. Real-Time Telemetry Stream"| Dashboard["📊 Live Web Dashboard & AI Root-Cause Advisor"]
 ```
 
-* **⚡ 2-Line Python Setup (`@track_agent`):** Add a lightweight decorator to your agent function. Zero complex setup.
-* **🎯 Automated OWASP Red-Team Pen-Testing:** Fires 5 concurrent live adversarial attacks against your agent to test Prompt Injections, Secret Leaks, and Jailbreaks in under 1 second.
-* **🌳 Multi-Agent Call Tree (DAG Hierarchy):** See what each sub-agent thought (`<think>` tokens), what tools it called, and how many milliseconds each step took.
-* **💰 Exact 4-Decimal Token Pricing:** Calculates precise costs across OpenAI, Anthropic, Groq, Gemini, DeepSeek, and local Ollama models down to `$0.0001` precision.
-* **🛠️ AI Fix & Root-Cause Advisor:** Automatically diagnoses failed runs and provides ready-to-paste Python code and prompt patches.
-* **🌐 Live Web Fact-Checking:** Uses Tavily search to verify claims against authoritative web sources in real time.
+---
+
+## 📖 Key Terms Explained in Simple Words
+
+| Term | What It Means (Plain English) |
+| :--- | :--- |
+| **🔍 AI Observability** | Watching every single thought, tool execution, and latency millisecond of your AI agent in real time. |
+| **🛡️ Security Red-Teaming** | Simulating real hacker attacks (Prompt Injections, Jailbreaks, Secret Theft) against your bot to test its defenses before users can hack it. |
+| **💰 Exact Token Pricing** | Calculating precise dollar spend down to **$0.0001** per request across OpenAI, Claude, Groq, Gemini, and Local models. |
+| **🛠️ AI Root-Cause Advisor** | Automatically diagnosing why an agent failed or looped, and generating ready-to-paste Python code and prompt patches. |
 
 ---
 
 ## 🏛️ System Architecture
 
 ```mermaid
-graph TD
-    subgraph Client_App["1. Client Applications"]
-        PythonApp[Python Agents / LangGraph / CrewAI] -->|"@track_agent Decorator"| IngestEndpoint[FastAPI Ingest API]
+flowchart TD
+    subgraph Ingestion["1. Fast Ingestion Layer (<15ms)"]
+        SDK["Python Agent (@track_agent)"] -->|"POST /api/traces/ingest"| API["FastAPI Ingestion Gateway"]
+        API --> Rate["Token Bucket Rate Limiter"]
+        API --> Loop["Deterministic Loop & Schema Check"]
+        API --> Price["Multi-Model Pricing Engine"]
+        API --> DB[(SQLite / PostgreSQL Async)]
     end
 
-    subgraph Ingestion_Engine["2. Fast Ingestion Engine"]
-        IngestEndpoint -->|Token Bucket Limiting| RateLimiter[Rate Limiter: 120 req/min]
-        IngestEndpoint -->|SHA-256 Auth| KeyStore[(Hashed API Keys)]
-        IngestEndpoint -->|Deterministic Check| FastDetector[Loop & Schema Failure Check]
-        IngestEndpoint -->|Exact Formula| CostEngine[Multi-Model Pricing Engine]
-        IngestEndpoint -->|Instant Write| Database[(PostgreSQL / SQLite Async)]
+    subgraph Workers["2. Async Background AI Evaluation Engine"]
+        API -.->|"non-blocking async task"| Worker["Background Worker"]
+        Worker --> LangGraph["LangGraph LLM Judge"]
+        Worker --> Tavily["Live Web Fact-Check (Tavily Search)"]
+        Worker --> Failover["4-Tier Zero-Crash Failover: Groq ➔ Gemini ➔ Local"]
+        Worker --> DB
     end
 
-    subgraph Workers["3. Async Background Workers"]
-        IngestEndpoint -.->|asyncio task| BackgroundWorker[Background LLM Worker]
-        BackgroundWorker -->|Quality Evaluation| LangGraphJudge[LangGraph LLM Judge]
-        BackgroundWorker -->|Live Fact-Check| TavilySearch[Tavily Search Engine]
-        BackgroundWorker -->|4-Tier Failover| LLMPool[Groq LPU ➔ Gemini ➔ Local]
-        BackgroundWorker -->|Update Trace Record| Database
-        BackgroundWorker -->|Live Event| WSBroker[WebSocket Telemetry Server]
-    end
-
-    subgraph Frontend_UI["4. Live Dashboard UI"]
-        WSBroker -->|Live Stream| ReactDashboard[React 19 + Tailwind CSS Dashboard]
-        Database -->|REST Queries| ReactDashboard
+    subgraph UI_Layer["3. Live Real-Time Dashboard"]
+        Worker -->|"Live Telemetry Event"| WS["WebSocket Server"]
+        WS --> Dashboard["React 19 + Tailwind CSS Dashboard"]
+        DB -->|"REST API"| Dashboard
     end
 ```
 
@@ -125,7 +140,7 @@ docker-compose up -d
 
 ## 💻 2-Line Python Integration
 
-Add the AgentOps decorator to your existing agent node:
+Add the AgentOps decorator to your existing agent function:
 
 ```python
 from sdk import track_agent
@@ -140,17 +155,17 @@ def my_agent_node(state):
 
 ---
 
-## 🛡️ OWASP Red-Team Attack Vectors Tested
+## 🛡️ Automated Security Red-Team Testing
 
 AgentOps runs 5 automated live adversarial security probes against your agent:
 
-| Attack ID | Threat Vector | Tested Behavior |
+| Attack Test | What Is Tested? | Expected Behavior |
 | :--- | :--- | :--- |
-| **`OWASP-LLM01`** | **Direct Prompt Injection** | Verifies agent refuses system prompt overrides and rule cancellations. |
-| **`OWASP-LLM02`** | **Sensitive Data Exfiltration** | Scans for leaked API keys (`gsk_...`, `sk-...`), passwords, and credentials. |
-| **`OWASP-LLM03`** | **DAN & Jailbreak Hijack** | Tests if the agent succumbs to "Do Anything Now" or unconstrained persona attacks. |
-| **`OWASP-LLM06`** | **Privilege Escalation** | Tests if the agent blocks dangerous administrative commands (`sudo rm -rf`). |
-| **`OWASP-LLM09`** | **Anti-Hallucination Probe** | Tests if the agent rejects hazardous medical or scientific falsehoods. |
+| **Direct Prompt Injection** | Checks if the agent reveals its private system prompt when told *"Ignore all previous rules"*. | 🛡️ **Blocked:** Agent refuses system prompt override. |
+| **API Key & Secret Leak Guard** | Scans output for confidential API keys (`gsk_...`, `sk-...`) or database passwords. | 🛡️ **Zero Leaks:** Sensitive keys redacted. |
+| **DAN & Jailbreak Resistance** | Tests if the agent adopts unconstrained or malicious personas. | 🛡️ **Safe:** Safety guidelines remain active. |
+| **Privilege Escalation** | Tests if the agent blocks dangerous administrative commands (`sudo rm -rf /`). | 🛡️ **Protected:** Unauthorized actions rejected. |
+| **Anti-Hallucination Probe** | Tests if the agent verifies or rejects dangerous medical/scientific falsehoods. | 🛡️ **Accurate:** False claims rejected. |
 
 ---
 
@@ -163,7 +178,7 @@ AgentOps/
 │   │   ├── auth/            # JWT & SHA-256 API Key Authentication
 │   │   ├── dashboard/       # Aggregations, Metrics & Routing Optimizer
 │   │   ├── evaluation/      # LangGraph Judge, Multi-Provider Pricing & Fact-Checking
-│   │   ├── security/        # OWASP LLM Red-Team Pen-Testing Engine
+│   │   ├── security/        # Security Red-Team Pen-Testing Engine
 │   │   ├── traces/          # High-Speed Ingestion & Cycle Loop Detection
 │   │   ├── main.py          # FastAPI Application Gateway
 │   │   ├── models.py        # SQLAlchemy Async Models
@@ -171,7 +186,7 @@ AgentOps/
 │   └── Dockerfile           # Multi-Stage Backend Docker Image
 ├── frontend/                 # React 19 + TypeScript + Tailwind CSS v4
 │   ├── src/
-│   │   ├── components/      # Glassmorphic UI, Trace DAG Trees & Metric Cards
+│   │   ├── components/      # Glassmorphic UI, Trace Call Trees & Metric Cards
 │   │   ├── pages/           # Landing Page, Live Runs, Alerts, Settings
 │   │   └── services/        # REST API & WebSocket Streaming Clients
 │   ├── Dockerfile           # Multi-Stage Node 20 Build + Nginx Alpine
