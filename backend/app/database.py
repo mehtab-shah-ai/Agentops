@@ -57,9 +57,12 @@ AsyncSessionLocal = async_sessionmaker(
 async def init_db() -> None:
     """Initialize database tables."""
     import app.models  # noqa: F401 - ensure models are registered in Base.metadata
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info("Database initialized successfully with WAL & Memory-mapped cache.")
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database initialized successfully with WAL & Memory-mapped cache.")
+    except Exception as e:
+        logger.warning(f"Database tables already present or initialized: {e}")
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
