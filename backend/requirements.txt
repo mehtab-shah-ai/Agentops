@@ -1,0 +1,27 @@
+# AgentGuard Backend Dependencies
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+sqlalchemy>=2.0.30
+aiosqlite>=0.20.0
+greenlet>=3.0.3
+pyjwt>=2.9.0
+passlib[bcrypt]>=1.7.4
+bcrypt>=4.0.0
+python-multipart>=0.0.9
+email-validator>=2.2.0
+websockets>=13.0
+httpx>=0.27.0
+python-dotenv>=1.0.1
+
+# LangGraph & LangChain ecosystem
+langgraph>=0.2.0
+langchain-core>=0.3.0
+langchain-groq>=0.2.0
+langchain-google-genai>=2.0.0
+
+# Testing
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+pytest-cov>=5.0.0

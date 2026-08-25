@@ -1,0 +1,49 @@
+services:
+  # ----------------------------------------------------------------------------
+  # Backend API & Observability Engine (Production Image from Docker Hub)
+  # ----------------------------------------------------------------------------
+  backend:
+    image: mehtabshahdev/agentops-backend:latest
+    container_name: agentops-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - backend_data:/app/data
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/agentops.db
+      - ENVIRONMENT=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - agentops-network
+
+  # ----------------------------------------------------------------------------
+  # Frontend Dashboard (Production Nginx Image from Docker Hub)
+  # ----------------------------------------------------------------------------
+  frontend:
+    image: mehtabshahdev/agentops-frontend:latest
+    container_name: agentops-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - agentops-network
+
+volumes:
+  backend_data:
+    driver: local
+
+networks:
+  agentops-network:
+    driver: bridge

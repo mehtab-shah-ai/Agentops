@@ -1,0 +1,53 @@
+services:
+  # ----------------------------------------------------------------------------
+  # Backend API & Observability Engine (FastAPI + Python 3.12)
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: agentops-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - backend_data:/app/data
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/agentops.db
+      - ENVIRONMENT=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - agentops-network
+
+  # ----------------------------------------------------------------------------
+  # Frontend Dashboard & SPA Reverse Proxy (React + Vite + Nginx)
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: agentops-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - agentops-network
+
+volumes:
+  backend_data:
+    driver: local
+
+networks:
+  agentops-network:
+    driver: bridge
