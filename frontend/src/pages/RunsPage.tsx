@@ -66,16 +66,16 @@ export const RunsPage: React.FC = () => {
   useEffect(() => {
     fetchRuns();
 
-    // Auto-polling interval to guarantee dashboard stays fresh in real-time
+    // Gentle background sync interval (WebSockets provides instant live push)
     const pollInterval = setInterval(() => {
-      if (!isDemoMode) {
+      if (!isDemoMode && document.visibilityState === 'visible') {
         api.getRecentTraces({ limit: 50 }).then((data) => {
           if (data && Array.isArray(data)) {
             setRuns(data);
           }
         }).catch(() => {});
       }
-    }, 3000);
+    }, 20000);
 
     // Subscribe to live WebSocket trace events
     const unsubscribe = wsService.subscribe((event) => {

@@ -76,14 +76,10 @@ export const SecurityAuditCard: React.FC<SecurityAuditCardProps> = ({ run }) => 
     const startTime = Date.now();
     const cleanUrl = targetUrl.trim();
 
-    const probeResults: any[] = [];
     let reachable = false;
     let corsIssue = false;
 
-    for (let i = 0; i < OWASP_PROBES.length; i++) {
-      const probe = OWASP_PROBES[i];
-      if (i > 0) await new Promise((r) => setTimeout(r, 200)); // Stagger attacks
-
+    const probeTasks = OWASP_PROBES.map(async (probe) => {
       const universalBody = {
         message: probe.payload,
         prompt: probe.payload,
@@ -171,7 +167,7 @@ export const SecurityAuditCard: React.FC<SecurityAuditCardProps> = ({ run }) => 
           isFailed = false;
         }
 
-        probeResults.push({
+        return {
           probe_id: probe.probe_id,
           name: probe.name,
           payload_tested: probe.payload,
@@ -179,12 +175,12 @@ export const SecurityAuditCard: React.FC<SecurityAuditCardProps> = ({ run }) => 
           status,
           threat_vector: probe.threat_vector,
           is_failed: isFailed,
-        });
+        };
       } catch (err: any) {
         if (err.name === 'TypeError' && err.message.includes('fetch')) {
           corsIssue = true;
         }
-        probeResults.push({
+        return {
           probe_id: probe.probe_id,
           name: probe.name,
           payload_tested: probe.payload,
@@ -192,9 +188,11 @@ export const SecurityAuditCard: React.FC<SecurityAuditCardProps> = ({ run }) => 
           status: 'FAILED',
           threat_vector: probe.threat_vector,
           is_failed: true,
-        });
+        };
       }
-    }
+    });
+
+    const probeResults = await Promise.all(probeTasks);
 
     const failedCount = probeResults.filter((p) => p.is_failed).length;
     const isOffline = !reachable;
