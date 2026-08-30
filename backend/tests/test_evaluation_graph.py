@@ -93,6 +93,7 @@ async def test_llm_client_fallback_execution():
     mock_groq = AsyncMock()
     mock_groq.ainvoke.side_effect = Exception("Groq 429: Rate limit exceeded")
     manager._groq_model = mock_groq
+    manager._groq_secondary_model = None
 
     # Mock fallback gemini model to succeed
     mock_gemini = AsyncMock()
